@@ -1,0 +1,123 @@
+@charset "utf-8";
+
+/* CSSを記述 START */
+    body {
+      font-size: 20px;
+      font-family: 'Segoe UI', 'Meiryo', sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #0078d4;
+      font-size: 2.4em;
+      margin-bottom: 0.7em;
+      letter-spacing: 0.1em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .janken-btns {
+      margin-top: 20px;
+    }
+
+    .janken-btns button {
+      background: none;
+      border: none;
+      margin: 10px;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .janken-btns img {
+      width: 200px;
+      height: 200px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #0002;
+      transition: transform 0.1s;
+    }
+
+    .janken-btns button:hover img {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px #0078d455;
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 1.4em;
+    }
+
+    .score {
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #0078d4;
+    }
+
+    .anim-area {
+      margin: 40px 0 20px 0;
+      min-height: 120px;
+    }
+
+    .anim-img {
+      width: 260px;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #0002;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .anim-text {
+      font-size: 2em;
+      color: #0078d4;
+      animation: fadeIn 1s;
+      display: block;
+      margin-top: 10px;
+      min-height: 1.5em;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .cpu-area {
+      margin-top: 25px;
+    }
+
+    .cpu-img {
+      width: 260px;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto 8px auto;
+      box-shadow: 0 2px 8px #0001;
+    }
+
+    #startBtn,.reset-btn {
+      margin-top: 20px;
+      padding: 12px 36px;
+      font-size: 1.1em;
+      background: #fff;
+      color: #0078d4;
+      border: 2px solid #0078d4;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #0078d4;
+      color: #fff;
+    }

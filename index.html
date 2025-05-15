@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="js/main.js" async></script>
+  <title>じゃんけんげ～む</title>
+  <style>
+  </style>
+</head>
+<body>
+  <h1>じゃんけんげ～む</h1>
+  <button id="startBtn">じゃんけんスタート！</button>
+  <div id="animArea" class="anim-area hidden">
+    <img id="animImg" src="" alt="じゃんけんアニメ" class="anim-img">
+    <span id="animText" class="anim-text"></span>
+  </div>
+  <div id="selectArea" class="hidden">
+    <div class="janken-btns">
+      <button onclick="play('ぐー')"><img src="/img/mygu.png" alt="ぐー"></button>
+      <button onclick="play('ちょき')"><img src="/img/mychoki.png" alt="ちょき"></button>
+      <button onclick="play('ぱー')"><img src="/img/mypa.png" alt="ぱー"></button>
+    </div>
+  </div>
+  <div class="result" id="result"></div>
+  <div class="cpu-area" id="cpuArea"></div>
+  <div class="score" id="score"></div>
+  <button id="resetBtn" class="reset-btn hidden" onclick="resetGame()">リセット</button>
+  <script>
+  </script>
+</body>
+
+</html>

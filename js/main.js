@@ -1,8 +1,8 @@
     // 画像URL
     const cpuImages = {
-      'ぐー': '/img/gu.png',
-      'ちょき': '/img/choki.png',
-      'ぱー': '/img/pa.png'
+      'ぐー': 'img/gu.png',
+      'ちょき': 'img/choki.png',
+      'ぱー': 'img/pa.png'
     };
     const hands = ['ぐー', 'ちょき', 'ぱー'];
     let win = 0, lose = 0, draw = 0;
@@ -16,11 +16,11 @@
       const animText = document.getElementById('animText');
       animArea.classList.remove('hidden');
       // 1. 「さいしょは～」＋saisho.png
-      animImg.src = '/img/saisho.png';
+      animImg.src = 'img/saisho.png';
       animText.textContent = '';
       // 2. 1.5秒後 → gu.png＋テキスト消す
       setTimeout(() => {
-        animImg.src = '/img/gu.png';
+        animImg.src = 'img/gu.png';
         animText.textContent = '';
         // 3. さらに1.5秒後 → 「じゃんけん～」＋手選択肢表示
         setTimeout(() => {

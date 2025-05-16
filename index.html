@@ -2,15 +2,129 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/main.js" async></script>
   <title>じゃんけんげ～む</title>
   <style>
+    body {
+      font-size: 20px;
+      font-family: 'Segoe UI', 'Meiryo', sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #0078d4;
+      font-size: 2.4em;
+      margin-bottom: 0.7em;
+      letter-spacing: 0.1em;
+    }
+    .hidden { display: none; }
+    .start-btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+    #startBtnSound {
+      margin-bottom: 18px; /* ボタン下に余白 */
+    }
+    #start-img {
+      width: 200px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    /* ...（他のCSSは省略、前回までと同様）... */
+    .janken-btns { margin-top: 20px; }
+    .janken-btns button {
+      background: none;
+      border: none;
+      margin: 10px;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+    }
+    .janken-btns img {
+      width: 200px;
+      height: 200px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #0002;
+      transition: transform 0.1s;
+    }
+    .janken-btns button:hover img {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px #0078d455;
+    }
+    .result {
+      margin-top: 30px;
+      font-size: 1.4em;
+    }
+    .score {
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #0078d4;
+    }
+    .anim-area {
+      margin: 40px 0 20px 0;
+      min-height: 120px;
+    }
+    .anim-img {
+      width: 260px;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #0002;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .anim-text {
+      font-size: 2em;
+      color: #0078d4;
+      animation: fadeIn 1s;
+      display: block;
+      margin-top: 10px;
+      min-height: 1.5em;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .cpu-area {
+      margin-top: 25px;
+    }
+    .cpu-img {
+      width: 260px;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto 8px auto;
+      box-shadow: 0 2px 8px #0001;
+    }
+    #startBtn, #startBtnSound, .reset-btn {
+      padding: 12px 36px;
+      font-size: 1.1em;
+      background: #fff;
+      color: #0078d4;
+      border: 2px solid #0078d4;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      width: 360px;
+      box-sizing: border-box;
+    }
+    .reset-btn:hover, #startBtn:hover, #startBtnSound:hover {
+      background: #0078d4;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
   <h1>じゃんけんげ～む</h1>
-  <button id="startBtn">じゃんけんスタート！</button>
+  <div class="start-btn-group">
+    <button id="startBtn">スタート（効果音なし）</button>
+    <button id="startBtnSound">スタート（効果音あり）</button>
+    <!-- img src="img/start.png" alt="スタート画像" id="start-img" -->
+  </div>
   <div id="animArea" class="anim-area hidden">
     <img id="animImg" src="" alt="じゃんけんアニメ" class="anim-img">
     <span id="animText" class="anim-text"></span>
@@ -26,8 +140,121 @@
   <div class="cpu-area" id="cpuArea"></div>
   <div class="score" id="score"></div>
   <button id="resetBtn" class="reset-btn hidden" onclick="resetGame()">リセット</button>
+  <audio id="startSound" src="se/sashohagujanken.mp3" preload="auto"></audio>
   <script>
+    const cpuImages = {
+      'ぐー': 'img/gu.png',
+      'ちょき': 'img/choki.png',
+      'ぱー': 'img/pa.png'
+    };
+    const hands = ['ぐー', 'ちょき', 'ぱー'];
+    let win = 0, lose = 0, draw = 0;
+    let played = false;
+
+    // 自分の手のSE
+    const myHandSounds = {
+      'ぐー': new Audio('se/cpugu.wav'),
+      'ちょき': new Audio('se/cpuchoki.wav'),
+      'ぱー': new Audio('se/cpupa.wav')
+    };
+    // 勝敗SE
+    const resultSounds = {
+      'win': new Audio('se/anatanokati.wav'),
+      'lose': new Audio('se/anatanomake.wav'),
+      'draw': new Audio('se/moikkai.wav')
+    };
+
+    function startGameSequence() {
+      const animArea = document.getElementById('animArea');
+      const animImg = document.getElementById('animImg');
+      const animText = document.getElementById('animText');
+      animArea.classList.remove('hidden');
+      animImg.src = 'img/saisho.png';
+      animText.textContent = '';
+      setTimeout(() => {
+        animImg.src = 'img/gu.png';
+        animText.textContent = '';
+        setTimeout(() => {
+          animText.textContent = 'じゃんけん～';
+          setTimeout(() => {
+            animArea.classList.add('hidden');
+            document.getElementById('selectArea').classList.remove('hidden');
+          }, 800);
+        }, 1500);
+      }, 1500);
+    }
+
+    document.getElementById('startBtn').onclick = function () {
+      this.classList.add('hidden');
+      document.getElementById('startBtnSound').classList.add('hidden');
+      startGameSequence();
+    };
+    document.getElementById('startBtnSound').onclick = function () {
+      this.classList.add('hidden');
+      document.getElementById('startBtn').classList.add('hidden');
+      const startSound = document.getElementById('startSound');
+      startSound.currentTime = 0;
+      startSound.play();
+      startGameSequence();
+    };
+
+    function play(playerHand) {
+      const cpuHand = hands[Math.floor(Math.random() * 3)];
+      let resultText = '';
+      let resultKey = '';
+      if (playerHand === cpuHand) {
+        resultText = 'あいこです！';
+        resultKey = 'draw';
+        draw++;
+      } else if (
+        (playerHand === 'ぐー' && cpuHand === 'ちょき') ||
+        (playerHand === 'ちょき' && cpuHand === 'ぱー') ||
+        (playerHand === 'ぱー' && cpuHand === 'ぐー')
+      ) {
+        resultText = 'あなたの勝ち！';
+        resultKey = 'win';
+        win++;
+      } else {
+        resultText = 'あなたの負け！';
+        resultKey = 'lose';
+        lose++;
+      }
+
+      document.getElementById('cpuArea').innerHTML =
+        `<div>
+          <img src="${cpuImages[cpuHand]}" alt="CPUの手" class="cpu-img">
+          <div>コンピュータ：<b>${cpuHand}</b></div>
+        </div>`;
+
+      document.getElementById('result').innerHTML =
+        `あなた：<b>${playerHand}</b><br><span style="font-size:1.3em">${resultText}</span>`;
+
+      document.getElementById('score').textContent =
+        `勝ち: ${win}　負け: ${lose}　あいこ: ${draw}`;
+
+      // 1. 自分の手のSE
+      if (myHandSounds[playerHand]) {
+        myHandSounds[playerHand].currentTime = 0;
+        myHandSounds[playerHand].play();
+      }
+      // 2. 0.5秒後に勝敗SE
+      setTimeout(() => {
+        if (resultKey && resultSounds[resultKey]) {
+          resultSounds[resultKey].currentTime = 0;
+          resultSounds[resultKey].play();
+        }
+      }, 500);
+
+      if (!played) {
+        document.getElementById('resetBtn').classList.remove('hidden');
+        played = true;
+      }
+    }
+
+    function resetGame() {
+      location.reload();
+    }
+    window.play = play;
   </script>
 </body>
-
 </html>

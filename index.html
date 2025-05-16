@@ -150,6 +150,8 @@
     const hands = ['ぐー', 'ちょき', 'ぱー'];
     let win = 0, lose = 0, draw = 0;
     let played = false;
+    // 効果音有効フラグ
+    let soundEnabled = false; 
 
     // 自分の手のSE
     const myHandSounds = {
@@ -180,18 +182,20 @@
             animArea.classList.add('hidden');
             document.getElementById('selectArea').classList.remove('hidden');
           }, 800);
-        }, 1500);
+        }, 1000);
       }, 1500);
     }
 
     document.getElementById('startBtn').onclick = function () {
       this.classList.add('hidden');
       document.getElementById('startBtnSound').classList.add('hidden');
+      soundEnabled = false;
       startGameSequence();
     };
     document.getElementById('startBtnSound').onclick = function () {
       this.classList.add('hidden');
       document.getElementById('startBtn').classList.add('hidden');
+      soundEnabled = true;
       const startSound = document.getElementById('startSound');
       startSound.currentTime = 0;
       startSound.play();
@@ -232,18 +236,21 @@
       document.getElementById('score').textContent =
         `勝ち: ${win}　負け: ${lose}　あいこ: ${draw}`;
 
-      // 1. 自分の手のSE
-      if (myHandSounds[playerHand]) {
-        myHandSounds[playerHand].currentTime = 0;
-        myHandSounds[playerHand].play();
-      }
-      // 2. 0.5秒後に勝敗SE
-      setTimeout(() => {
-        if (resultKey && resultSounds[resultKey]) {
-          resultSounds[resultKey].currentTime = 0;
-          resultSounds[resultKey].play();
+      // 効果音有効時のみ再生
+      if (soundEnabled) {
+        // 1. 自分の手のSE
+        if (myHandSounds[playerHand]) {
+          myHandSounds[playerHand].currentTime = 0;
+          myHandSounds[playerHand].play();
         }
-      }, 500);
+        // 2. 0.5秒後に勝敗SE
+        setTimeout(() => {
+          if (resultKey && resultSounds[resultKey]) {
+            resultSounds[resultKey].currentTime = 0;
+            resultSounds[resultKey].play();
+          }
+        }, 500);
+      }
 
       if (!played) {
         document.getElementById('resetBtn').classList.remove('hidden');
